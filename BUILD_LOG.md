@@ -130,7 +130,54 @@ Implement baseline state tracking, multi-scale IP-day feature engineering, deter
 ### Status & Next Steps
 - 46/46 tests passing.
 - `ruff check` and `ruff format` 100% clean.
-- Phase 2 complete. Ready for commit.
-- Next: Phase 3 (Narrator, Security, and Demo: Ollama client with loopback guard, JSON-schema output, grounding validator V1-V7, template fallback, renderers, red-team injection suite, and `sloth-soc demo`).
+- Phase 2 complete. Committed as `6624ba2`.
+- Next: Phase 3 (Narrator, Security, and Demo).
+
+---
+
+## [2026-10-21] Phase 3: Narrator, Security Validator, Renderers & Red Team
+
+### Goal
+Implement the LLM narration client with loopback guardrail and template fallback, JSON-schema structured output, strict grounding validator (V1-V7), multi-format renderers (Markdown, HTML with strict CSP, and terminal), red-team prompt-injection benchmark suite (`naive`, `structured`, `hardened`), and end-to-end `demo` command.
+
+### Actions & Commands
+1. **Narrator & Prompting (`src/sloth_soc/llm/`)**:
+   - `prompts.py`: `SYSTEM_PROMPT` emphasizing math/code decides and `serialize_brief` omitting untrusted strings in hardened mode.
+   - `schema.py`: Strict `DIGEST_SCHEMA` defining JSON types, enums, length limits, and regex patterns.
+   - `fallback.py`: Deterministic `TemplateNarrator` guaranteeing zero downtime.
+   - `validator.py`: `DigestValidator` enforcing V1 (schema), V2 (status match), V3 (coverage/no hallucinated finding IDs), V4 (grounded IPs and numbers), V5 (forbidden URLs, HTML tags, shell pipes), V6 (untrusted context leakage), and V7 (string lengths).
+   - `client.py`: `OllamaClient` with loopback enforcement, automatic 3-attempt validation-feedback retry loop, and fallback to `TemplateNarrator`.
+   - `fake.py`: `FakeLLM` for fast, offline testing.
+2. **Renderers (`src/sloth_soc/render/`)**:
+   - `markdown.py`: Structured Markdown report with status banner, attention findings, handled items, and telemetry footer.
+   - `html.py`: Self-contained HTML with inline styles, Jinja2 autoescaping, and strict CSP: `<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline';">`.
+   - `terminal.py`: Rich terminal presentation with colored status badges, attention tables, and formatted actions.
+3. **Red-Team Suite (`src/sloth_soc/redteam/`)**:
+   - `payloads.py`: 14 attack payloads across threat families P1 through P9 (direct overrides, authority spoofs, schema breaks, canaries, markdown exfiltration, action hijacking, newline forging, unicode bidi disguise, and multilingual evasion).
+   - `runner.py`: Evaluates `naive`, `structured`, and `hardened` modes against real findings; judges `hijack`, `omission`, and `unsafe_output`; computes bootstrap 95% CIs and outputs `results/E4.json`.
+4. **End-to-End Pipeline & CLI (`src/sloth_soc/pipeline.py`, `src/sloth_soc/cli.py`)**:
+   - Implemented `sloth-soc demo [--no-llm] [--seed N]`: Generates a synthetic week, runs ensemble detection, findings partitioning, narration, renders markdown/html/json files, and outputs terminal summary.
+   - Implemented `sloth-soc redteam [--quick]`: Prints comparative ASR table across modes and families.
+   - Captured visual screenshot of rendered HTML digest (`results/digest_screenshot.png`) using headless Microsoft Edge.
+5. **Tests**:
+   - `tests/test_validator.py`: Valid payload, malformed JSON (V1), status mismatch (V2), missing critical finding / hallucinated ID (V3), hallucinated IP (V4), URL and shell pipe injection (V5), canary leakage (V6).
+   - `tests/test_html_renderer.py`: Strict CSP verification, absence of external URLs, and autoescaping of raw `<script>` and `<img>` tags.
+   - `tests/test_demo.py`: End-to-end synthetic demo execution generating valid `.md`, `.html`, and `.json`.
+   - `tests/test_redteam.py`: Execution of red-team runner asserting hardened ASR = 0.0.
+
+### Surprises & Insights (for the article)
+We were shocked by how easily structured output without grounding validation still leaked authority: when presented with a P2 authority spoof, the model generated valid JSON with 100% schema accuracy but dutifully declared a critical credential stuffing attack 'quiet' and 'whitelisted by admin'. Only when untrusted strings were completely withheld from the prompt (D2) and verified against deterministic code (D5) did the attack success rate drop to an unyielding 0.0%.
+
+### Metrics Snapshot (from `results/E4.json`)
+- **Naive Pipeline ASR**: `78.6%` (95% CI: `[57.1%, 100.0%]`, Raw LLM Fail: `92.9%`, Hijacks: 7, Omissions: 3, Unsafe Output: 4)
+- **Structured Pipeline ASR**: `64.3%` (95% CI: `[35.7%, 85.7%]`, Raw LLM Fail: `64.3%`, Hijacks: 7, Omissions: 0, Unsafe Output: 2)
+- **Hardened Pipeline ASR**: `0.0%` (95% CI: `[0.0%, 0.0%]`, Raw LLM Fail: `50.0%`, Hijacks: 0, Omissions: 0, Unsafe Output: 0)
+
+### Status & Next Steps
+- 59/59 tests passing.
+- `ruff check` and `ruff format` 100% clean.
+- Phase 3 complete.
+- Next: Phase 4 (Hardening, no-egress test, E3 sweep, E5, E6, figures, README results block, clean-clone test, LICENSES.md).
+
 
 

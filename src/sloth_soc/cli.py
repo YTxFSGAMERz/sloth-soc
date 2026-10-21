@@ -7,6 +7,7 @@ import os
 import platform
 import socket
 import sys
+from datetime import UTC
 
 import httpx
 import typer
@@ -187,9 +188,37 @@ def doctor(
 def demo(
     no_llm: bool = typer.Option(False, "--no-llm", help="Use deterministic template narrator"),
     seed: int = typer.Option(1, "--seed", help="Random seed for synthetic week"),
+    out_dir: str = typer.Option("digests", "--out", help="Output directory for digests"),
 ) -> None:
     """Generate a synthetic week, run the full pipeline, and write a digest."""
-    console.print(f"[yellow]Placeholder for demo (Phase 3)[/yellow]: seed={seed}, no_llm={no_llm}")
+    from sloth_soc.pipeline import run_synthetic_demo
+    from sloth_soc.render.terminal import print_terminal_digest
+
+    console.print(
+        Panel.fit(
+            f"[bold green]Sloth SOC Demo[/bold green] (seed={seed}, no_llm={no_llm})",
+            border_style="cyan",
+        )
+    )
+
+    with console.status(
+        "[cyan]Running demo: generating synthetic week and executing detection pipeline...[/cyan]"
+    ):
+        res = run_synthetic_demo(seed=seed, no_llm=no_llm, out_dir=out_dir)
+
+    brief = res["brief"]
+    narrator_out = res["narrator_output"]
+    meta = res["metadata"]
+    handled = res["handled_findings"]
+    saved_files = res["saved_files"]
+
+    # Print terminal output
+    print_terminal_digest(brief, narrator_out, meta, handled, console=console)
+
+    console.print("[bold green]Digest files generated successfully:[/bold green]")
+    for fmt, p in saved_files.items():
+        console.print(f"  - [{fmt.upper()}] {p}")
+    console.print()
 
 
 @app.command()
@@ -227,11 +256,61 @@ def run(
     config_path: str = typer.Option(None, "--config", "-c", help="Config file path"),
     date: str = typer.Option(None, "--date", help="Target date YYYY-MM-DD"),
     no_llm: bool = typer.Option(False, "--no-llm", help="Use deterministic template narrator"),
+    out_dir: str = typer.Option("digests", "--out", help="Output directory for digests"),
 ) -> None:
     """Analyze real log files and generate the morning digest."""
+    from datetime import datetime
+    from pathlib import Path
+
+    from sloth_soc.config import load_config
+    from sloth_soc.parsers import parse_file
+    from sloth_soc.pipeline import run_pipeline_on_events, save_digest_outputs
+    from sloth_soc.render.terminal import print_terminal_digest
+    from sloth_soc.schema import Event
+
+    cfg = load_config(config_path)
+    target_date = date or datetime.now(UTC).strftime("%Y-%m-%d")
+
     console.print(
-        f"[yellow]Placeholder for run (Phase 3)[/yellow]: config={config_path}, date={date}, no_llm={no_llm}"
+        Panel.fit(
+            f"[bold green]Sloth SOC Run[/bold green] (target_date={target_date}, no_llm={no_llm})",
+            border_style="cyan",
+        )
     )
+
+    events: list[Event] = []
+    source_items = [
+        ("sshd", cfg.sources.sshd),
+        ("nginx", cfg.sources.nginx),
+        ("fail2ban", cfg.sources.fail2ban),
+        ("ufw", cfg.sources.ufw),
+    ]
+
+    for src_name, src_cfg in source_items:
+        if src_cfg.enabled and src_cfg.path:
+            p = Path(src_cfg.path)
+            if p.exists():
+                evs, _ = parse_file(p, source=src_name)
+                events.extend(evs)
+
+    events.sort(key=lambda e: e.ts)
+
+    with console.status("[cyan]Analyzing events and compiling digest...[/cyan]"):
+        brief, narrator_out, meta, handled = run_pipeline_on_events(
+            events=events,
+            target_date=target_date,
+            config=cfg,
+            no_llm=no_llm,
+            host_label=cfg.host_label,
+        )
+        saved_files = save_digest_outputs(brief, narrator_out, meta, handled, out_dir=out_dir)
+
+    print_terminal_digest(brief, narrator_out, meta, handled, console=console)
+
+    console.print("[bold green]Digest files generated successfully:[/bold green]")
+    for fmt, p in saved_files.items():
+        console.print(f"  - [{fmt.upper()}] {p}")
+    console.print()
 
 
 @app.command()
@@ -303,7 +382,21 @@ def redteam(
     quick: bool = typer.Option(False, "--quick", help="Run quick CI-sized red-team suite"),
 ) -> None:
     """Run prompt-injection red-team suite across naive, structured, and hardened modes."""
-    console.print(f"[yellow]Placeholder for redteam (Phase 3)[/yellow]: quick={quick}")
+    from sloth_soc.redteam.runner import print_redteam_table, run_redteam
+
+    console.print(
+        Panel.fit(
+            f"[bold red]Sloth SOC Red-Team Suite[/bold red] (quick={quick})",
+            border_style="red",
+        )
+    )
+
+    with console.status(
+        "[cyan]Evaluating attack success rates (ASR) against P1-P9 payloads...[/cyan]"
+    ):
+        report = run_redteam(quick=quick)
+
+    print_redteam_table(report, console=console)
 
 
 if __name__ == "__main__":
