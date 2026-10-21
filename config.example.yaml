@@ -1,0 +1,32 @@
+host_label: lab-vps
+timezone: UTC
+sources:
+  sshd:
+    paths: ["/var/log/auth.log*"]
+  nginx:
+    paths: ["/var/log/nginx/access.log*"]
+  fail2ban:
+    paths: ["/var/log/fail2ban.log*"]
+  ufw:
+    paths: ["/var/log/ufw.log*"]
+detect:
+  attention_budget: 5
+  rules:
+    r1_fail_5m: 10
+    r2_users: 8
+    r3_probes: 5
+    r4_ports: 15
+  tabpfn:
+    enabled: false
+llm:
+  backend: ollama
+  host: http://127.0.0.1:11434
+  model: gemma4:e4b        # verify the tag with `ollama list`; use gemma4:e2b on small machines
+  temperature: 0
+  num_ctx: 8192
+  think: false
+  allow_remote: false
+output:
+  dir: digests
+  formats: [md, html, json]
+  tone: plain
