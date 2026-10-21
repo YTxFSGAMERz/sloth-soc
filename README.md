@@ -63,7 +63,7 @@ All numbers below are generated directly from machine-readable JSON benchmarks i
 | **Precision@5 (Top Attention)** | **1.000** | &ge; 0.80 | [`results/E1.json`](results/E1.json) |
 | **Hardened Prompt-Injection ASR** | **0.0%** [0.0%, 0.0%] | 0.0% | [`results/E4.json`](results/E4.json) |
 | **Runtime Network Egress** | **0 bytes** (Strict loopback) | 0 bytes | [`results/E5.json`](results/E5.json) |
-| **Lazy Ratio (Raw Lines : Items)** | **329:1** (~26h saved/mo) | &ge; 100:1 | [`results/E6.json`](results/E6.json) |
+| **Lazy Ratio (Raw Lines : Items)** | **575:1** benchmark (329:1 demo) | &ge; 100:1 | [`results/E6.json`](results/E6.json) |
 
 *Full evaluation reports, bootstrap confidence intervals, and breakdowns are documented in [`results/RESULTS.md`](results/RESULTS.md).*
 <!-- RESULTS:END -->

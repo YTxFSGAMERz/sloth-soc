@@ -6,15 +6,15 @@ Every number presented below is derived directly from committed machine-readable
 ## E1: Detection Performance on Held-Out Test Seeds
 
 - **Hardware:** Windows 11 | AMD64 | 12 CPU Cores
-- **Git SHA:** `7f9a820`
+- **Git SHA:** `29f15f0`
 
 | Detector | F1 Score (95% CI) | PR-AUC | Precision@5 | Recall@5 | Critical M4 Recall |
 |---|---|---|---|---|---|
-| **Rules** | 0.979 [0.979, 0.979] | 0.967 | 1.000 | 0.125 | **1.00** |
-| **Stat** | 0.667 [0.667, 0.667] | 0.971 | 1.000 | 0.125 | **1.00** |
-| **Iforest** | 0.662 [0.662, 0.662] | 0.848 | 0.886 | 0.111 | **0.00** |
-| **Rf Baseline** | 1.000 [1.000, 1.000] | 1.000 | 1.000 | 0.125 | **1.00** |
-| **Ensemble** | 0.979 [0.979, 0.979] | 0.982 | 1.000 | 0.125 | **1.00** |
+| **Rules** | 0.979 [0.971, 0.988] | 0.967 | 1.000 | 0.500 | **1.00** |
+| **Stat** | 0.667 [0.667, 0.667] | 0.971 | 1.000 | 0.500 | **1.00** |
+| **Iforest** | 0.662 [0.638, 0.686] | 0.848 | 0.821 | 0.411 | **0.00** |
+| **Rf Baseline** | 1.000 [1.000, 1.000] | 1.000 | 1.000 | 0.500 | **1.00** |
+| **Ensemble** | 0.979 [0.971, 0.988] | 0.982 | 1.000 | 0.500 | **1.00** |
 
 ## E1b: Distribution Shift Generalization
 

@@ -1,9 +1,9 @@
 {
   "experiment": "E3",
   "description": "Narrator latency, faithfulness, and validation pass rates across model tiers",
-  "created_at": "2026-10-21T14:58:56.131450+00:00",
+  "created_at": "2026-10-21T15:22:17.714137+00:00",
   "n_simulated_days": 20,
-  "git_sha": "1e1c0a9",
+  "git_sha": "29f15f0",
   "hardware": {
     "os": "Windows 11",
     "arch": "AMD64",

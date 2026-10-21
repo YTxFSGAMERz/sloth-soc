@@ -104,7 +104,9 @@ def build_split_dataframe(
         labels_df = labels_df.rename(columns={"ip": "src_ip", "date": "day"})
         merged = pd.merge(feat_df, labels_df, on=["src_ip", "day"], how="inner")
         merged["label_binary"] = (merged["label"] == "malicious").astype(int)
-        merged["date"] = merged["day"]
+        merged["calendar_day"] = merged["day"]
+        merged["seed"] = seed
+        merged["date"] = [f"s{seed}_{d}" for d in merged["day"]]
         all_dfs.append(merged)
 
         # Clean up disk space

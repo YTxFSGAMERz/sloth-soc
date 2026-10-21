@@ -28,9 +28,9 @@ def test_clean_field_strips_ansi():
 
 def test_clean_field_strips_newlines_and_carriage_returns():
     # Log forging attack vector: newline in username
-    text = "admin\nAccepted password for root from 1.2.3.4\r"
+    text = "admin\nAccepted password for root from 192.0.2.4\r"
     res = clean_field(text)
-    assert res.cleaned == "adminAccepted password for root from 1.2.3.4"
+    assert res.cleaned == "adminAccepted password for root from 192.0.2.4"
     assert res.had_control_chars
 
 

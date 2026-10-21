@@ -1,8 +1,8 @@
 {
   "experiment": "E1",
   "description": "Detector comparison on held-out test seeds",
-  "created_at": "2026-10-21T14:22:35.342679+00:00",
-  "git_sha": "7f9a820",
+  "created_at": "2026-10-21T15:22:09.883566+00:00",
+  "git_sha": "29f15f0",
   "hardware": {
     "os": "Windows 11",
     "arch": "AMD64",
@@ -17,8 +17,8 @@
     "rich": "15.0.0",
     "httpx": "0.28.1"
   },
-  "n_train_days": 7,
-  "n_test_days": 7,
+  "n_train_days": 21,
+  "n_test_days": 28,
   "n_test_rows": 392,
   "detectors": {
     "rules": {
@@ -28,10 +28,10 @@
         "f1": 0.9790209790209791,
         "pr_auc": 0.9671232876712328,
         "precision_at_5": 1.0,
-        "recall_at_5": 0.125,
+        "recall_at_5": 0.5,
         "f1_ci_95": [
-          0.976,
-          0.982
+          0.971,
+          0.988
         ]
       },
       "per_scenario_recall": {
@@ -57,7 +57,7 @@
         "f1": 0.6666666666666666,
         "pr_auc": 0.9714285714285715,
         "precision_at_5": 1.0,
-        "recall_at_5": 0.125,
+        "recall_at_5": 0.5,
         "f1_ci_95": [
           0.667,
           0.667
@@ -85,11 +85,11 @@
         "recall": 0.5535714285714286,
         "f1": 0.6623931623931624,
         "pr_auc": 0.8481193889122406,
-        "precision_at_5": 0.8857142857142856,
-        "recall_at_5": 0.1107142857142857,
+        "precision_at_5": 0.8214285714285715,
+        "recall_at_5": 0.41071428571428575,
         "f1_ci_95": [
-          0.654,
-          0.672
+          0.638,
+          0.686
         ]
       },
       "per_scenario_recall": {
@@ -115,7 +115,7 @@
         "f1": 1.0,
         "pr_auc": 1.0,
         "precision_at_5": 1.0,
-        "recall_at_5": 0.125,
+        "recall_at_5": 0.5,
         "f1_ci_95": [
           1.0,
           1.0
@@ -144,10 +144,10 @@
         "f1": 0.9790209790209791,
         "pr_auc": 0.9818003913894324,
         "precision_at_5": 1.0,
-        "recall_at_5": 0.125,
+        "recall_at_5": 0.5,
         "f1_ci_95": [
-          0.976,
-          0.982
+          0.971,
+          0.988
         ]
       },
       "per_scenario_recall": {

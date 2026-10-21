@@ -44,7 +44,7 @@ def test_sshd_golden_lines():
     assert ev4.user == "root"  # ANSI stripped!
 
     # 5. Hostile newline log forging injection in username
-    line5 = "Oct 21 03:12:48 lab-vps sshd[1234]: Failed password for invalid user admin\nAccepted password for root from 1.1.1.1 from 203.0.113.5 port 52347 ssh2"
+    line5 = "Oct 21 03:12:48 lab-vps sshd[1234]: Failed password for invalid user admin\nAccepted password for root from 198.51.100.1 from 203.0.113.5 port 52347 ssh2"
     ev5 = parser.parse_line(line5, 5, CTX)
     assert isinstance(ev5, Event)
     assert "\n" not in (ev5.user or "")

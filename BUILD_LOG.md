@@ -223,6 +223,34 @@ When analyzing operational payoff (E6), the math surprised us: on a modest perso
 - `ruff check .` and `ruff format --check .` 100% clean.
 - **FEATURE FREEZE DECLARED**: Core functionality, schema, detectors, and renderers are frozen. Only documentation, packaging polish, and author review remain.
 
+---
+
+## Skeptical Review & Audit Remediations (Day 1 - Post Freeze Polish)
+
+### Context & Objective
+Conducted an adversarial peer review acting as a skeptical DEV Community judge and security reviewer against `docs/SUBMISSION_CHECKLIST.md`, `docs/THREAT_MODEL.md`, and `docs/EVALUATION_PLAN.md`. Identified top scoring risks and applied the top three high-impact fixes.
+
+### Fixes Applied
+1. **Fix 1: Metric Rigor & Server-Day Grouping (Evaluation Engine)**:
+   - Problem: In multi-seed evaluations, concatenating splits across seeds without instance qualification caused `compute_precision_recall_at_k` to pool multiple simulated servers onto identical calendar dates (`date`), evaluating a single 5-item attention cap against 40 concurrent malicious instances ($5/40 = 0.125$ pooled recall@5).
+   - Solution: Updated `src/sloth_soc/evalkit/runner.py` so `date` maps to `s{seed}_{day}` (per-simulated-server-day units) and fixed the confidence interval dictionary key lookup in `src/sloth_soc/evalkit/report.py` (`f1_ci_95`).
+   - Outcome: Precision@5 is an uncompromising `1.000` with per-server Recall@5 at `0.500` (reflecting an attention budget of 5 items against an attack day of 10 instances). Regenerated `results/E1.json` and compiled true bootstrap CIs (`[0.971, 0.988]`). Harmonized `README.md` and `docs/POST_DRAFT.md` to clearly distinguish the 329:1 single-day demo from the 575:1 35-day benchmark.
+2. **Fix 2: Strict RFC 5737 Test Fixture Compliance (Security & Hygiene)**:
+   - Replaced accidental public IP `1.1.1.1` in `tests/test_parsers_golden.py` with RFC 5737 `198.51.100.1`.
+   - Replaced `1.2.3.4` in `tests/test_sanitize.py` with RFC 5737 `192.0.2.4`.
+   - Grep verification across all tests confirms 100% compliance with reserved documentation ranges.
+3. **Fix 3: Post Draft Polish & TabPFN Cut Rationale (Community & Narrative)**:
+   - Polished `docs/POST_DRAFT.md` by replacing all author placeholders with ready-to-publish prose.
+   - Inserted the verbatim JSON output trace from the P2 authority spoofing attack demonstrating that 100% schema compliance still leaks semantic authority without grounding validation.
+   - Added a dedicated architectural section *"Why We Cut TabPFN (Pragmatic Open-Source Engineering)"*, documenting our invocation of Cut-Line 1 due to non-commercial weight licenses and GPU dependencies in defense of zero-friction, offline open-source software.
+   - Explicitly clarified hardware specs and local Ollama testing parameters for Experiment E3.
+
+### Verification
+- `pytest -q`: 60/60 passing.
+- `ruff check .` & `ruff format --check .`: Clean.
+- `sloth-soc eval --all`: Recomputed all JSON metrics, figures, and `results/RESULTS.md`.
+
+
 
 
 

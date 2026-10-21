@@ -38,7 +38,7 @@ def generate_results_markdown(
         for det_name, det_info in e1.get("detectors", {}).items():
             m = det_info["metrics"]
             m4 = det_info["critical_scenario_recall_m4"]
-            ci = m.get("f1_ci", [m["f1"], m["f1"]])
+            ci = m.get("f1_ci_95") or m.get("f1_ci") or [m["f1"], m["f1"]]
             lines.append(
                 f"| **{det_name.replace('_', ' ').title()}** | {m['f1']:.3f} [{ci[0]:.3f}, {ci[1]:.3f}] | {m['pr_auc']:.3f} | {m['precision_at_5']:.3f} | {m['recall_at_5']:.3f} | **{m4:.2f}** |"
             )
@@ -212,7 +212,7 @@ def generate_readme_results_block(results_dir: str | Path = "results") -> str:
 | **Precision@5 (Top Attention)** | **1.000** | &ge; 0.80 | [`results/E1.json`](results/E1.json) |
 | **Hardened Prompt-Injection ASR** | **{asr_str}** [0.0%, 0.0%] | 0.0% | [`results/E4.json`](results/E4.json) |
 | **Runtime Network Egress** | **0 bytes** (Strict loopback) | 0 bytes | [`results/E5.json`](results/E5.json) |
-| **Lazy Ratio (Raw Lines : Items)** | **{lazy_str}** (~26h saved/mo) | &ge; 100:1 | [`results/E6.json`](results/E6.json) |
+| **Lazy Ratio (Raw Lines : Items)** | **{lazy_str}** benchmark (329:1 demo) | &ge; 100:1 | [`results/E6.json`](results/E6.json) |
 
 *Full evaluation reports, bootstrap confidence intervals, and breakdowns are documented in [`results/RESULTS.md`](results/RESULTS.md).*
 <!-- RESULTS:END -->"""
