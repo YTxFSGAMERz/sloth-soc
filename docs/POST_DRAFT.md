@@ -255,6 +255,14 @@ This project would have been impossible with closed cloud APIs:
 
 ---
 
+## Partner Technologies & Session Sharing
+
+- **Google Gemma 4 (`gemma4:e4b` / `gemma4:e2b`)**: The primary narrator engine behind Sloth SOC. Selected for its open weights, lightweight parameter footprints, and reliable instruction-following capabilities on local consumer hardware via Ollama.
+- **DevRelay / Entire (Session Sharing Track)**: Embedded agent build session transcript documenting our prompt-injection red-team discoveries, metric corrections, and offline verification:
+  {% agent_session 1095 %}
+
+---
+
 ## Limitations & Honest Boundaries
 
 1. **Synthetic vs Real Internet:** While our generator models realistic noise and attacks (RFC 5737 and RFC 3849 addresses), production traffic has edge cases (weird reverse proxy headers, malformed TLS handshakes) that require continuous tuning.
