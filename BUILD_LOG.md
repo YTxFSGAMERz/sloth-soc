@@ -77,5 +77,60 @@ Build the synthetic log generator supporting scenarios B1-B6, M1-M7, and M5b wit
 ### Status & Next Steps
 - 29/29 tests passing.
 - `ruff check` and `ruff format` 100% clean.
-- Ready to commit Phase 1. Next: Phase 2 (Detection Layer: features, rules R1-R8, stat, iforest, ensemble, findings).
+- Phase 1 committed.
+
+---
+
+## [2026-10-21] Phase 2: Detection Layer & Evaluation Benchmarks
+
+### Goal
+Implement baseline state tracking, multi-scale IP-day feature engineering, deterministic rules R1-R8, Poisson/FDR stat detector, IsolationForest, RF baseline, ensemble detector, findings with attention budgeting and handled grouping, and initial evaluation benchmarks (E1, E1b, E2).
+
+### Actions & Commands
+1. **Baseline State (`src/sloth_soc/state.py`)**:
+   - Built `StateStore` with SQLite persistence for `known_ips`, `known_user_ips`, and `hourly_baselines`.
+   - Strictly enforces baseline isolation: baselines are only updated from previous historical days.
+2. **Feature Engineering (`src/sloth_soc/features.py`)**:
+   - Built `build_ip_day_features`: computes 5-minute sliding window burst max, Shannon entropies for usernames/paths, inter-arrival time coefficient of variation (`iat_cv`), sensitive web probing counts, firewall drops, and injection marker hit counts.
+   - Verified zero leakage of IP, date, scenario labels, or ground truth into ML features via `test_features.py`.
+3. **Detectors (`src/sloth_soc/detectors/`)**:
+   - `rules.py`: Rules R1 through R8 covering brute-force burst, user spray, sensitive path probing, port scans, critical credential stuffing, new location logins, low-and-slow probing, and prompt injection attempts.
+   - `stat.py`: Poisson tail probability tests with Benjamini-Hochberg FDR control ($q=0.05$).
+   - `iforest.py`: Unsupervised IsolationForest with robust scaling and percentile ranking.
+   - `rf.py`: Supervised Random Forest tabular classifier benchmark.
+   - `tabpfn_det.py`: Optional TabPFN classifier with lazy import and graceful fallback.
+   - `ensemble.py`: Rank-averaging ensemble blending rule severity floors with statistical/ML rankings.
+4. **Findings & Attention Budget (`src/sloth_soc/findings.py`)**:
+   - Generates `Finding` contracts with structured evidence and safe `ActionEnum` values.
+   - Partitions into "Needs attention" (capped at budget=5, Critical prioritized) and "Handled while you slept" (blocked items at severity <= medium).
+   - Assigns deterministic status: `urgent` on critical, `attention` on high/medium, `quiet` otherwise.
+5. **Evaluation Harness (`src/sloth_soc/evalkit/`)**:
+   - Implemented `sloth-soc eval --exp E1,E1b,E2`:
+     - `E1`: Detector comparison on test seeds (seeds 21-24) after fitting on train seeds (1-3).
+     - `E1b`: Generalization test on distribution shift seeds (101-103) without retraining.
+     - `E2`: Label efficiency curve comparing sample sizes (10, 20, 50, full).
+   - Generates machine-readable `results/E1.json`, `results/E1b.json`, `results/E2.json` with hardware, versions, and 95% bootstrap confidence intervals.
+6. **Tests**:
+   - `tests/test_state.py`: SQLite baseline integrity and known user/IP tracking.
+   - `tests/test_features.py`: Multi-scale feature extraction and strict feature leakage assertions.
+   - `tests/test_detectors.py`: Rules R1-R8, stat FDR, IsolationForest, and Ensemble rank-averaging.
+   - `tests/test_findings.py`: Budget truncation, handled grouping, and deterministic status.
+
+### Failures & Fixes
+- *Issue*: Sparse DataFrames in tests caused `row.get("auth_fail_max_5m")` to return `NaN`, raising `ValueError: cannot convert float NaN to integer`.
+- *Fix*: Created robust `_safe_int` and `_safe_float` coercion helpers that gracefully map `None` or `NaN` to clean numerical defaults.
+
+### Metrics Snapshot (from `results/E1.json`)
+- **Ensemble F1**: `0.979` (95% CI: `[0.976, 0.982]`)
+- **Ensemble PR-AUC**: `0.982`
+- **Precision@5**: `1.000` (exceeds target >= 0.80)
+- **Critical M4 Scenario Recall**: `1.00` (100% - hits target 100%)
+- **IsolationForest M4 Recall**: `0.00` (proves why unsupervised ML alone fails on low-and-slow stuffing and validates the hybrid architecture ADR-4).
+
+### Status & Next Steps
+- 46/46 tests passing.
+- `ruff check` and `ruff format` 100% clean.
+- Phase 2 complete. Ready for commit.
+- Next: Phase 3 (Narrator, Security, and Demo: Ollama client with loopback guard, JSON-schema output, grounding validator V1-V7, template fallback, renderers, red-team injection suite, and `sloth-soc demo`).
+
 

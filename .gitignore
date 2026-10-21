@@ -38,8 +38,6 @@ htmlcov/
 # Sloth SOC outputs (preserve folders with .gitkeep if needed)
 digests/*
 !digests/.gitkeep
-results/*
-!results/.gitkeep
 data/*
 !data/.gitkeep
 

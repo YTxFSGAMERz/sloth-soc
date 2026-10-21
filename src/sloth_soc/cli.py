@@ -236,11 +236,66 @@ def run(
 
 @app.command()
 def eval(
-    all: bool = typer.Option(False, "--all", help="Run all experiments E1-E6"),
-    exp: str = typer.Option(None, "--exp", help="Comma-separated experiment list e.g. E1,E4"),
+    all: bool = typer.Option(False, "--all", help="Run all experiments"),
+    exp: str = typer.Option(None, "--exp", help="Comma-separated experiment list e.g. E1,E1b,E2"),
 ) -> None:
     """Run evaluation experiments and output results and figures."""
-    console.print(f"[yellow]Placeholder for eval (Phase 2 & 4)[/yellow]: all={all}, exp={exp}")
+    from sloth_soc.evalkit.runner import (
+        run_experiment_e1,
+        run_experiment_e1b,
+        run_experiment_e2,
+    )
+
+    targets = []
+    if all:
+        targets = ["E1", "E1b", "E2"]
+    elif exp:
+        targets = [x.strip().upper() for x in exp.split(",")]
+    else:
+        console.print("[yellow]Please specify --all or --exp E1,E1b,E2[/yellow]")
+        return
+
+    console.print(f"[bold cyan]Running evaluation experiments:[/bold cyan] {', '.join(targets)}")
+
+    if "E1" in targets:
+        console.print("Executing [magenta]Experiment E1[/magenta] (Detector comparison)...")
+        res = run_experiment_e1()
+        table = Table(title="E1: Test Split Detection Results", show_header=True)
+        table.add_column("Detector", style="cyan")
+        table.add_column("F1", justify="right")
+        table.add_column("PR-AUC", justify="right")
+        table.add_column("P@5", justify="right")
+        table.add_column("R@5", justify="right")
+        table.add_column("M4 Recall", justify="right")
+
+        for det_name, det_data in res.get("detectors", {}).items():
+            m = det_data["metrics"]
+            m4_rec = det_data["critical_scenario_recall_m4"]
+            m4_style = "[green]1.00[/green]" if m4_rec == 1.0 else f"[red]{m4_rec:.2f}[/red]"
+            table.add_row(
+                det_name,
+                f"{m['f1']:.3f}",
+                f"{m['pr_auc']:.3f}",
+                f"{m['precision_at_5']:.3f}",
+                f"{m['recall_at_5']:.3f}",
+                m4_style,
+            )
+        console.print(table)
+        console.print("[green]Saved results to results/E1.json[/green]\n")
+
+    if "E1B" in targets:
+        console.print(
+            "Executing [magenta]Experiment E1b[/magenta] (Distribution shift generalization)..."
+        )
+        run_experiment_e1b()
+        console.print("[green]Saved results to results/E1b.json[/green]\n")
+
+    if "E2" in targets:
+        console.print("Executing [magenta]Experiment E2[/magenta] (Label efficiency curve)...")
+        run_experiment_e2()
+        console.print("[green]Saved results to results/E2.json[/green]\n")
+
+    console.print("[bold green]Evaluations complete.[/bold green]")
 
 
 @app.command()
