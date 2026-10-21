@@ -42,5 +42,40 @@ Establish project foundations: repository scaffold, MIT license, data contracts 
 - *Fix*: In non-interactive developer environments, Ollama background service must be launched via desktop app or `ollama serve`. In the meantime, code and tests gracefully handle unreachable Ollama by using `FakeLLM` and `--no-llm` fallback, exactly as planned in `docs/SPEC.md` and `docs/BUILD_PLAN.md`.
 
 ### Status & Next Steps
-- Phase 0 foundation complete. All unit tests ready for execution.
-- Next: run `ruff` and `pytest`, verify `sloth-soc doctor`, commit Phase 0, then proceed to Phase 1 (Data Engine).
+- Phase 0 foundation complete. All unit tests passed, repo committed.
+- Proceeding to Phase 1 (Data Engine).
+
+---
+
+## [2026-10-21] Phase 1: Data Engine (Synthetic Generator & Log Parsers)
+
+### Goal
+Build the synthetic log generator supporting scenarios B1-B6, M1-M7, and M5b with ground-truth labels and byte-determinism, and implement the four robust log parsers (`sshd`, `nginx`, `fail2ban`, `ufw`) with parse statistics and fuzz/round-trip tests.
+
+### Actions & Commands
+1. **Parsers (`src/sloth_soc/parsers/`)**:
+   - `base.py`: `ParserContext`, `validate_ip` (handles IPv4/IPv6, strips scopes), `parse_timestamp` (syslog & ISO-8601 with 7-day future rollover protection).
+   - `sshd.py`: OpenSSH syslog & ISO parser with support for `auth_fail`, `auth_ok`, `invalid_user`, `disconnect`, `max_attempts`, and PAM failures. Sanitizes free text.
+   - `nginx.py`: Combined Log Format parser handling custom formats, malformed HTTP requests, TLS binary probes, status codes, and bytes.
+   - `fail2ban.py`: Parses `Ban`, `Restore Ban`, `Unban`, and `Found` actions with jail names.
+   - `ufw.py`: Kernel netfilter log parser extracting `SRC`, `DST`, `PROTO`, `SPT`, `DPT`.
+   - `__init__.py`: Registry with `get_parser`, `parse_stream`, and `parse_file` supporting compressed `.gz` and rotated logs.
+2. **Synthetic Generator (`src/sloth_soc/synth/`)**:
+   - `constants.py`: Reserved IP pools (RFC 5737 TEST-NET-1/2/3, RFC 3849 IPv6, RFC 1918 backup), probe path lists, and prompt injection test payloads.
+   - `generator.py`: Generates `auth.log`, `nginx/access.log`, `fail2ban.log`, `ufw.log`, `labels.csv`, and `meta.json`. Shuffles IP roles per seed to prevent shortcut learning.
+   - Added `sloth-soc synth` CLI command.
+3. **Tests**:
+   - `tests/test_parsers_golden.py`: 6 hand-crafted lines per parser, including hostile ANSI escapes, CRLF log forging, and IPv6.
+   - `tests/test_parsers_fuzz.py`: Property-based fuzz tests with `hypothesis` (`st.text()`) ensuring zero exceptions.
+   - `tests/test_synth_determinism.py`: Byte-determinism verification across runs and RFC-reserved IP safety check.
+   - `tests/test_synth_roundtrip.py`: Synthetic dataset round-trip coverage asserting >= 99% parse coverage across all sources.
+
+### Failures & Fixes
+- *Issue*: A golden test line with an embedded newline failed because `SSHD_PREFIX_RE.match` did not match across `\n`.
+- *Fix*: Hardened all parsers to strip `\r` and `\n` at the start of `parse_line`, completely neutralizing CRLF log forging injection before regex matching.
+
+### Status & Next Steps
+- 29/29 tests passing.
+- `ruff check` and `ruff format` 100% clean.
+- Ready to commit Phase 1. Next: Phase 2 (Detection Layer: features, rules R1-R8, stat, iforest, ensemble, findings).
+

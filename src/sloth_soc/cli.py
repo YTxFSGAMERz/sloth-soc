@@ -200,8 +200,25 @@ def synth(
     out: str = typer.Option("data/synthetic", "--out", help="Output directory"),
 ) -> None:
     """Generate synthetic log files and ground-truth labels."""
+    from sloth_soc.synth.generator import SyntheticGenerator
+
     console.print(
-        f"[yellow]Placeholder for synth (Phase 1)[/yellow]: seed={seed}, days={days}, shift={shift}, out={out}"
+        f"[bold cyan]Generating synthetic logs[/bold cyan] (seed={seed}, days={days}, shift={shift})..."
+    )
+    generator = SyntheticGenerator(seed=seed, days=days, shift=shift)
+    meta = generator.generate(out)
+
+    table = Table(title=f"Synthetic Dataset (Output: {out})", show_header=True)
+    table.add_column("File", style="cyan")
+    table.add_column("Lines", justify="right")
+    table.add_column("SHA-256 Digest", style="dim")
+
+    for fname, info in meta.get("files", {}).items():
+        table.add_row(fname, str(info.get("lines")), info.get("sha256")[:16] + "...")
+
+    console.print(table)
+    console.print(
+        f"[green]SUCCESS:[/green] Generated {len(meta.get('files', {}))} files to [bold]{out}[/bold]\n"
     )
 
 
