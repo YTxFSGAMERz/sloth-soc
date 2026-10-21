@@ -1,0 +1,10 @@
+[Unit]
+Description=Trigger Sloth SOC morning digest every day at 06:00 UTC
+Persistent=true
+
+[Timer]
+OnCalendar=*-*-* 06:00:00 UTC
+RandomizedDelaySec=120
+
+[Install]
+WantedBy=timers.target

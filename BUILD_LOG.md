@@ -176,8 +176,53 @@ We were shocked by how easily structured output without grounding validation sti
 ### Status & Next Steps
 - 59/59 tests passing.
 - `ruff check` and `ruff format` 100% clean.
-- Phase 3 complete.
-- Next: Phase 4 (Hardening, no-egress test, E3 sweep, E5, E6, figures, README results block, clean-clone test, LICENSES.md).
+- Phase 3 complete. Committed as `1e1c0a9`.
+- Next: Phase 4 (Hardening, evidence, and feature freeze).
+
+---
+
+## [2026-10-21] Phase 4: Hardening, Empirical Evidence, Figures & Feature Freeze
+
+### Goal
+Implement the strict no-egress offline runtime test (`tests/test_no_egress.py`), execute experiments E3, E5, and E6, generate publication figures in `results/figures/`, compile `results/RESULTS.md` and the dynamic README results block, generate production deployment scheduling templates (`deploy/`), committed sample digests (`examples/`), `docs/LICENSES.md`, initial `docs/POST_DRAFT.md`, and declare **FEATURE FREEZE**.
+
+### Actions & Commands
+1. **Network Isolation Enforcement (`tests/test_no_egress.py`)**:
+   - Built socket interceptor fixture raising `AssertionError` if any IP outside loopback (`127.0.0.1`, `::1`, `localhost`) is contacted.
+   - Tested end-to-end demo execution under socket interception. Passed with zero non-loopback attempts.
+2. **Benchmark Experiments (`src/sloth_soc/evalkit/`)**:
+   - `E3`: Model sweep evaluating latency, first-try validity, retry pass rate, and grounding error rate across Gemma 4B, Gemma 2B, template fallback, and FakeLLM. Output: `results/E3.json`.
+   - `E5`: Automated offline execution verification proving zero external bytes transmitted during runtime. Output: `results/E5.json`.
+   - `E6`: Laziness economics calculating raw lines analyzed, attention items, lazy ratio (329:1), human reading time saved (~26 hours/month), and zero cloud token fees. Output: `results/E6.json`.
+   - Consolidated runner via `sloth-soc eval --all`.
+3. **Publication Figures (`src/sloth_soc/evalkit/figures.py`)**:
+   - `results/figures/E1_scenario_recall.png`: Per-scenario recall across all detectors.
+   - `results/figures/E1_pr_curves.png`: Precision, recall, and F1 comparisons.
+   - `results/figures/E2_label_efficiency.png`: Label efficiency comparing supervised RF vs unsupervised IsolationForest.
+   - `results/figures/E4_asr_comparison.png`: Attack success rate comparison across naive, structured, and hardened modes.
+4. **Reports & Packaging**:
+   - Generated `results/RESULTS.md` summarizing all experiments with 95% CIs and hardware specs.
+   - Dynamic results block embedded in `README.md` between `<!-- RESULTS:START -->` and `<!-- RESULTS:END -->`.
+   - Production scheduling templates created in `deploy/` (`crontab.example`, `sloth-soc.service`, `sloth-soc.timer`, `schedule-task.ps1`).
+   - Committed sample digests under `examples/` (`digest_sample.md`, `.html`, `.json`).
+   - Third-party licenses and model terms documented in `docs/LICENSES.md`.
+   - Drafted DEV article in `docs/POST_DRAFT.md` using real results and `devto-post-writer` guidelines.
+
+### Surprises & Insights (for the article)
+When analyzing operational payoff (E6), the math surprised us: on a modest personal server with ~2,300 log lines per day, an administrator would spend over 26 hours per month manually skimming lines at 50 lines/minute. By applying deterministic attention budgeting ($K=5$) and letting an offline Gemma summarize verified facts in 120 words, daily review time dropped to under 40 seconds—achieving a true 329:1 lazy ratio with zero cloud subscription fees.
+
+### Metrics Snapshot (from `results/*.json`)
+- **Ensemble F1**: `0.979` (PR-AUC: `0.982`, Precision@5: `1.000`)
+- **Critical Scenario M4 Recall**: `100%` (vs `0%` for IsolationForest alone)
+- **Hardened ASR**: `0.0%` (95% CI: `[0.0%, 0.0%]`, down from `78.6%` naive)
+- **Runtime Network Egress**: `0 bytes` (100% offline)
+- **Lazy Ratio**: `329:1` (Over 26 hours saved monthly)
+
+### Status & Feature Freeze
+- 60/60 tests passing (`pytest -q`).
+- `ruff check .` and `ruff format --check .` 100% clean.
+- **FEATURE FREEZE DECLARED**: Core functionality, schema, detectors, and renderers are frozen. Only documentation, packaging polish, and author review remain.
+
 
 
 

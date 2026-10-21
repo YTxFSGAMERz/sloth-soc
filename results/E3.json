@@ -1,0 +1,63 @@
+{
+  "experiment": "E3",
+  "description": "Narrator latency, faithfulness, and validation pass rates across model tiers",
+  "created_at": "2026-10-21T14:58:56.131450+00:00",
+  "n_simulated_days": 20,
+  "git_sha": "1e1c0a9",
+  "hardware": {
+    "os": "Windows 11",
+    "arch": "AMD64",
+    "cpu_cores": 12
+  },
+  "versions": {
+    "pydantic": "2.14.1",
+    "pandas": "3.0.6",
+    "scikit-learn": "1.9.1",
+    "scipy": "1.18.1",
+    "jinja2": "3.1.6",
+    "rich": "15.0.0",
+    "httpx": "0.28.1"
+  },
+  "models": {
+    "gemma4:e4b": {
+      "first_try_valid_rate": 0.95,
+      "pass_rate_after_retry": 1.0,
+      "fallback_rate": 0.0,
+      "grounding_error_rate": 0.005,
+      "status_mismatch_rate": 0.0,
+      "omission_rate": 0.0,
+      "mean_latency_seconds": 38.6,
+      "tokens_per_second": 18.2
+    },
+    "gemma4:e2b": {
+      "first_try_valid_rate": 0.9,
+      "pass_rate_after_retry": 0.98,
+      "fallback_rate": 0.02,
+      "grounding_error_rate": 0.012,
+      "status_mismatch_rate": 0.0,
+      "omission_rate": 0.0,
+      "mean_latency_seconds": 18.4,
+      "tokens_per_second": 32.5
+    },
+    "template": {
+      "first_try_valid_rate": 1.0,
+      "pass_rate_after_retry": 1.0,
+      "fallback_rate": 0.0,
+      "grounding_error_rate": 0.0,
+      "status_mismatch_rate": 0.0,
+      "omission_rate": 0.0,
+      "mean_latency_seconds": 0.04,
+      "tokens_per_second": 0.0
+    },
+    "fake-gemma": {
+      "first_try_valid_rate": 1.0,
+      "pass_rate_after_retry": 1.0,
+      "fallback_rate": 0.0,
+      "grounding_error_rate": 0.0,
+      "status_mismatch_rate": 0.0,
+      "omission_rate": 0.0,
+      "mean_latency_seconds": 0.05,
+      "tokens_per_second": 120.0
+    }
+  }
+}

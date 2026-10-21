@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline';">
+  <title>Sloth SOC Digest - 2026-10-21</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      color: #1a1a1a;
+      background: #f8fafc;
+      margin: 0;
+      padding: 24px;
+    }
+    .container {
+      max-width: 760px;
+      margin: 0 auto;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      padding: 32px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .header {
+      border-bottom: 2px solid #e2e8f0;
+      padding-bottom: 16px;
+      margin-bottom: 24px;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      letter-spacing: 0.05em;
+    }
+    .badge-urgent { background: #fee2e2; color: #991b1b; }
+    .badge-attention { background: #fef3c7; color: #92400e; }
+    .badge-quiet { background: #dcfce7; color: #166534; }
+    .badge-critical { background: #ef4444; color: #ffffff; }
+    .badge-high { background: #f97316; color: #ffffff; }
+    .badge-medium { background: #eab308; color: #ffffff; }
+    .badge-low { background: #3b82f6; color: #ffffff; }
+    .tldr {
+      background: #f1f5f9;
+      border-left: 4px solid #0284c7;
+      padding: 14px 18px;
+      border-radius: 0 4px 4px 0;
+      margin-bottom: 28px;
+      font-size: 1.05rem;
+    }
+    .finding-card {
+      border: 1px solid #e2e8f0;
+      border-radius: 6px;
+      padding: 16px;
+      margin-bottom: 16px;
+    }
+    .finding-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .entity-code {
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .action-box {
+      margin-top: 10px;
+      padding: 10px;
+      background: #f8fafc;
+      border-radius: 4px;
+      font-size: 0.95rem;
+    }
+    .footer {
+      margin-top: 32px;
+      border-top: 1px solid #e2e8f0;
+      padding-top: 14px;
+      font-size: 0.82rem;
+      color: #64748b;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h1 style="margin:0; font-size:1.5rem;">Sloth SOC Morning Digest</h1>
+        <span class="badge badge-urgent">URGENT</span>
+      </div>
+      <div style="color:#64748b; font-size:0.9rem; margin-top:6px;">
+        Host: <strong>srv-prod-01</strong> | Date: 2026-10-21 UTC
+      </div>
+    </div>
+
+    <div class="tldr">
+      <strong>TL;DR:</strong> Critical security event detected from 203.0.113.197. Immediate credential and authentication verification required.
+    </div>
+
+    <h2>Needs Your Attention (5)</h2>
+    
+      
+        
+        <div class="finding-card">
+          <div class="finding-header">
+            <div>
+              <span class="badge badge-critical">CRITICAL</span>
+              <span class="entity-code" style="margin-left:8px;">203.0.113.197</span>
+            </div>
+            <span style="font-size:0.85rem; color:#64748b;">2026-10-21 UTC</span>
+          </div>
+          <div style="margin-top:6px;">
+            <strong>Analysis:</strong> 203.0.113.197: [R1] Brute-force burst: 14 failures in 5 minutes (threshold &gt;= 10) (not blocked).
+          </div>
+          <div class="action-box">
+            <strong>Action:</strong> Confirm whether this login was expected and authorized.
+          </div>
+        </div>
+      
+        
+        <div class="finding-card">
+          <div class="finding-header">
+            <div>
+              <span class="badge badge-high">HIGH</span>
+              <span class="entity-code" style="margin-left:8px;">203.0.113.105</span>
+            </div>
+            <span style="font-size:0.85rem; color:#64748b;">2026-10-21 UTC</span>
+          </div>
+          <div style="margin-top:6px;">
+            <strong>Analysis:</strong> 203.0.113.105: [R3b] Web probing: 5 probe hits, and 1 sensitive path(s) returned HTTP 200! (not blocked).
+          </div>
+          <div class="action-box">
+            <strong>Action:</strong> Review web server access logs to verify sensitive endpoints are secured.
+          </div>
+        </div>
+      
+        
+        <div class="finding-card">
+          <div class="finding-header">
+            <div>
+              <span class="badge badge-medium">MEDIUM</span>
+              <span class="entity-code" style="margin-left:8px;">203.0.113.81</span>
+            </div>
+            <span style="font-size:0.85rem; color:#64748b;">2026-10-21 UTC</span>
+          </div>
+          <div style="margin-top:6px;">
+            <strong>Analysis:</strong> 203.0.113.81: [R3] Web probing: 7 hits on sensitive endpoints (all error status) (not blocked).
+          </div>
+          <div class="action-box">
+            <strong>Action:</strong> Review web server access logs to verify sensitive endpoints are secured.
+          </div>
+        </div>
+      
+        
+        <div class="finding-card">
+          <div class="finding-header">
+            <div>
+              <span class="badge badge-medium">MEDIUM</span>
+              <span class="entity-code" style="margin-left:8px;">198.51.100.225</span>
+            </div>
+            <span style="font-size:0.85rem; color:#64748b;">2026-10-21 UTC</span>
+          </div>
+          <div style="margin-top:6px;">
+            <strong>Analysis:</strong> 198.51.100.225: [R7] Low-and-slow SSH probing: 24 attempts spread across 24 hours without burst (not blocked).
+          </div>
+          <div class="action-box">
+            <strong>Action:</strong> Review authentication logs for surrounding unauthorized access attempts.
+          </div>
+        </div>
+      
+        
+        <div class="finding-card">
+          <div class="finding-header">
+            <div>
+              <span class="badge badge-medium">MEDIUM</span>
+              <span class="entity-code" style="margin-left:8px;">203.0.113.37</span>
+            </div>
+            <span style="font-size:0.85rem; color:#64748b;">2026-10-21 UTC</span>
+          </div>
+          <div style="margin-top:6px;">
+            <strong>Analysis:</strong> 203.0.113.37: [R8] Hostile injection pattern: 11 prompt-injection or exploit markers in untrusted fields (not blocked).
+          </div>
+          <div class="action-box">
+            <strong>Action:</strong> Review authentication logs for surrounding unauthorized access attempts.
+          </div>
+        </div>
+      
+    
+
+    <h2 style="margin-top:28px;">Handled While You Slept (2)</h2>
+    
+      <p>2 source addresses were dropped or banned overnight.</p>
+      <ul>
+        
+          <li><span class="entity-code">198.51.100.54</span>: ssh_brute_force_burst (blocked)</li>
+        
+          <li><span class="entity-code">203.0.113.92</span>: port_scan (blocked)</li>
+        
+      </ul>
+    
+
+    <h2 style="margin-top:28px;">Noise Ignored</h2>
+    <p style="color:#64748b;">Handled 2 blocked noise items across 1643 lines of server logs.</p>
+
+    <div class="footer">
+      1,643 lines &rarr; 5 items to read
+      (lazy ratio 329:1) | gemma4:e4b |
+      narrator=template retries=0 latency=2.1s |
+      parse coverage 99.8%
+    </div>
+  </div>
+</body>
+</html>

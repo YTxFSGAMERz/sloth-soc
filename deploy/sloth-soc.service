@@ -1,0 +1,14 @@
+[Unit]
+Description=Sloth SOC Nightly Security Analysis
+After=network.target ollama.service
+
+[Service]
+Type=oneshot
+User=sloth
+WorkingDirectory=/opt/sloth-soc
+ExecStart=/opt/sloth-soc/.venv/bin/sloth-soc run --config /opt/sloth-soc/config.yaml --out /var/www/html/digests
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

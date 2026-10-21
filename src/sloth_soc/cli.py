@@ -316,22 +316,30 @@ def run(
 @app.command()
 def eval(
     all: bool = typer.Option(False, "--all", help="Run all experiments"),
-    exp: str = typer.Option(None, "--exp", help="Comma-separated experiment list e.g. E1,E1b,E2"),
+    exp: str = typer.Option(
+        None, "--exp", help="Comma-separated experiment list e.g. E1,E1b,E2,E3,E4,E5,E6"
+    ),
 ) -> None:
-    """Run evaluation experiments and output results and figures."""
+    """Run evaluation experiments, generate figures, and output results."""
+    from sloth_soc.evalkit.figures import generate_all_evaluation_figures
+    from sloth_soc.evalkit.report import generate_results_markdown
     from sloth_soc.evalkit.runner import (
         run_experiment_e1,
         run_experiment_e1b,
         run_experiment_e2,
+        run_experiment_e3,
+        run_experiment_e5,
+        run_experiment_e6,
     )
+    from sloth_soc.redteam.runner import run_redteam
 
     targets = []
     if all:
-        targets = ["E1", "E1b", "E2"]
+        targets = ["E1", "E1B", "E2", "E3", "E4", "E5", "E6"]
     elif exp:
         targets = [x.strip().upper() for x in exp.split(",")]
     else:
-        console.print("[yellow]Please specify --all or --exp E1,E1b,E2[/yellow]")
+        console.print("[yellow]Please specify --all or --exp E1,E1b,E2,E3,E4,E5,E6[/yellow]")
         return
 
     console.print(f"[bold cyan]Running evaluation experiments:[/bold cyan] {', '.join(targets)}")
@@ -373,6 +381,36 @@ def eval(
         console.print("Executing [magenta]Experiment E2[/magenta] (Label efficiency curve)...")
         run_experiment_e2()
         console.print("[green]Saved results to results/E2.json[/green]\n")
+
+    if "E3" in targets:
+        console.print("Executing [magenta]Experiment E3[/magenta] (Model sweep & faithfulness)...")
+        run_experiment_e3()
+        console.print("[green]Saved results to results/E3.json[/green]\n")
+
+    if "E4" in targets:
+        console.print("Executing [magenta]Experiment E4[/magenta] (Red-team injection suite)...")
+        run_redteam(quick=False)
+        console.print("[green]Saved results to results/E4.json[/green]\n")
+
+    if "E5" in targets:
+        console.print(
+            "Executing [magenta]Experiment E5[/magenta] (No-egress offline verification)..."
+        )
+        run_experiment_e5()
+        console.print("[green]Saved results to results/E5.json[/green]\n")
+
+    if "E6" in targets:
+        console.print("Executing [magenta]Experiment E6[/magenta] (Laziness payoff economics)...")
+        run_experiment_e6()
+        console.print("[green]Saved results to results/E6.json[/green]\n")
+
+    # Generate figures and report markdown
+    console.print("[cyan]Generating figures and compiling RESULTS.md...[/cyan]")
+    generate_all_evaluation_figures()
+    generate_results_markdown()
+    console.print(
+        "[green]Generated figures in results/figures/ and compiled results/RESULTS.md[/green]"
+    )
 
     console.print("[bold green]Evaluations complete.[/bold green]")
 

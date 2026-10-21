@@ -1,0 +1,648 @@
+{
+  "brief": {
+    "date": "2026-10-21",
+    "status": "urgent",
+    "stats": {
+      "raw_lines": 1643,
+      "findings_total": 5,
+      "handled_blocked": 2
+    },
+    "findings": [
+      {
+        "id": "F1",
+        "severity": "critical",
+        "kind": "ssh_success_after_failures",
+        "entity": "203.0.113.197",
+        "window": "2026-10-21 UTC",
+        "evidence": {
+          "counts": {
+            "auth_fail_total": 14,
+            "auth_fail_max_5m": 14,
+            "probe_hits": 0,
+            "http_total": 0,
+            "fw_block_total": 0
+          },
+          "first_ts": null,
+          "last_ts": null,
+          "blocked": false,
+          "failed_attempts": 14,
+          "distinct_users": 1
+        },
+        "reasons": [
+          "[R1] Brute-force burst: 14 failures in 5 minutes (threshold >= 10)",
+          "[R5] CRITICAL: SSH login success following >= 10 failed attempts from an unknown host",
+          "Statistical spike: auth_fail_total=14 (expected baseline ~0.5, Poisson p=4.39e-16)",
+          "IsolationForest top anomaly: auth_fail_total=14.0 (baseline median=0.0, robust z=140000.0)",
+          "IsolationForest top anomaly: auth_fail_max_5m=14.0 (baseline median=0.0, robust z=140000.0)"
+        ],
+        "evidence_refs": [
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 542
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 543
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 544
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 545
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 546
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 547
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 548
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 549
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 550
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 551
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 552
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 553
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 554
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 555
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 556
+          }
+        ],
+        "blocked": false,
+        "score": 1.0,
+        "action": "CONFIRM_LEGIT_LOGIN"
+      },
+      {
+        "id": "F2",
+        "severity": "high",
+        "kind": "web_probe_exposed_path",
+        "entity": "203.0.113.105",
+        "window": "2026-10-21 UTC",
+        "evidence": {
+          "counts": {
+            "auth_fail_total": 0,
+            "auth_fail_max_5m": 0,
+            "probe_hits": 5,
+            "http_total": 6,
+            "fw_block_total": 0
+          },
+          "first_ts": null,
+          "last_ts": null,
+          "blocked": false,
+          "failed_attempts": 0,
+          "distinct_users": 0
+        },
+        "reasons": [
+          "[R3b] Web probing: 5 probe hits, and 1 sensitive path(s) returned HTTP 200!",
+          "Statistical spike: 404_count=5 (expected baseline ~0.5, Poisson p=1.72e-04)",
+          "IsolationForest top anomaly: probe_hits=5.0 (baseline median=0.0, robust z=50000.0)",
+          "IsolationForest top anomaly: probe_2xx=1.0 (baseline median=0.0, robust z=10000.0)"
+        ],
+        "evidence_refs": [
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9650
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9651
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9652
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9653
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9654
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9655
+          }
+        ],
+        "blocked": false,
+        "score": 0.9136363636363636,
+        "action": "REVIEW_WEB_LOGS"
+      },
+      {
+        "id": "F3",
+        "severity": "medium",
+        "kind": "web_path_probing",
+        "entity": "203.0.113.81",
+        "window": "2026-10-21 UTC",
+        "evidence": {
+          "counts": {
+            "auth_fail_total": 0,
+            "auth_fail_max_5m": 0,
+            "probe_hits": 7,
+            "http_total": 8,
+            "fw_block_total": 0
+          },
+          "first_ts": null,
+          "last_ts": null,
+          "blocked": false,
+          "failed_attempts": 0,
+          "distinct_users": 0
+        },
+        "reasons": [
+          "[R3] Web probing: 7 hits on sensitive endpoints (all error status)",
+          "Statistical spike: 404_count=8 (expected baseline ~0.5, Poisson p=6.22e-08)",
+          "IsolationForest top anomaly: ua_suspicious=8.0 (baseline median=0.0, robust z=80000.0)",
+          "IsolationForest top anomaly: probe_hits=7.0 (baseline median=0.0, robust z=70000.0)"
+        ],
+        "evidence_refs": [
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9543
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9544
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9545
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9546
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9547
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9548
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9549
+          },
+          {
+            "file": "data\\synthetic_demo\\nginx\\access.log",
+            "line_no": 9550
+          }
+        ],
+        "blocked": false,
+        "score": 0.9636363636363636,
+        "action": "REVIEW_WEB_LOGS"
+      },
+      {
+        "id": "F4",
+        "severity": "medium",
+        "kind": "low_and_slow_ssh",
+        "entity": "198.51.100.225",
+        "window": "2026-10-21 UTC",
+        "evidence": {
+          "counts": {
+            "auth_fail_total": 24,
+            "auth_fail_max_5m": 1,
+            "probe_hits": 0,
+            "http_total": 0,
+            "fw_block_total": 0
+          },
+          "first_ts": null,
+          "last_ts": null,
+          "blocked": false,
+          "failed_attempts": 24,
+          "distinct_users": 10
+        },
+        "reasons": [
+          "[R7] Low-and-slow SSH probing: 24 attempts spread across 24 hours without burst",
+          "Statistical spike: auth_fail_total=24 (expected baseline ~0.5, Poisson p=5.95e-32)",
+          "IsolationForest top anomaly: auth_fail_total=24.0 (baseline median=0.0, robust z=240000.0)",
+          "IsolationForest top anomaly: distinct_users=10.0 (baseline median=0.0, robust z=100000.0)"
+        ],
+        "evidence_refs": [
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 541
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 557
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 559
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 575
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 584
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 590
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 602
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 603
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 609
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 611
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 615
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 616
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 617
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 618
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 620
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 621
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 622
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 623
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 625
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 626
+          }
+        ],
+        "blocked": false,
+        "score": 0.9454545454545454,
+        "action": "REVIEW_AUTH_LOG"
+      },
+      {
+        "id": "F5",
+        "severity": "medium",
+        "kind": "prompt_injection_attempt",
+        "entity": "203.0.113.37",
+        "window": "2026-10-21 UTC",
+        "evidence": {
+          "counts": {
+            "auth_fail_total": 5,
+            "auth_fail_max_5m": 5,
+            "probe_hits": 0,
+            "http_total": 0,
+            "fw_block_total": 0
+          },
+          "first_ts": null,
+          "last_ts": null,
+          "blocked": false,
+          "failed_attempts": 5,
+          "distinct_users": 5
+        },
+        "reasons": [
+          "[R8] Hostile injection pattern: 11 prompt-injection or exploit markers in untrusted fields",
+          "Statistical spike: auth_fail_total=5 (expected baseline ~0.5, Poisson p=1.72e-04)",
+          "IsolationForest top anomaly: auth_fail_total=5.0 (baseline median=0.0, robust z=50000.0)",
+          "IsolationForest top anomaly: auth_fail_max_5m=5.0 (baseline median=0.0, robust z=50000.0)"
+        ],
+        "evidence_refs": [
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 604
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 605
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 606
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 607
+          },
+          {
+            "file": "data\\synthetic_demo\\auth.log",
+            "line_no": 608
+          }
+        ],
+        "blocked": false,
+        "score": 0.8954545454545455,
+        "action": "REVIEW_AUTH_LOG"
+      }
+    ],
+    "untrusted_context": null
+  },
+  "narrator_output": {
+    "status_claim": "urgent",
+    "tldr": "Critical security event detected from 203.0.113.197. Immediate credential and authentication verification required.",
+    "items": [
+      {
+        "finding_id": "F1",
+        "explanation": "203.0.113.197: [R1] Brute-force burst: 14 failures in 5 minutes (threshold >= 10) (not blocked).",
+        "action": "CONFIRM_LEGIT_LOGIN"
+      },
+      {
+        "finding_id": "F2",
+        "explanation": "203.0.113.105: [R3b] Web probing: 5 probe hits, and 1 sensitive path(s) returned HTTP 200! (not blocked).",
+        "action": "REVIEW_WEB_LOGS"
+      },
+      {
+        "finding_id": "F3",
+        "explanation": "203.0.113.81: [R3] Web probing: 7 hits on sensitive endpoints (all error status) (not blocked).",
+        "action": "REVIEW_WEB_LOGS"
+      },
+      {
+        "finding_id": "F4",
+        "explanation": "198.51.100.225: [R7] Low-and-slow SSH probing: 24 attempts spread across 24 hours without burst (not blocked).",
+        "action": "REVIEW_AUTH_LOG"
+      },
+      {
+        "finding_id": "F5",
+        "explanation": "203.0.113.37: [R8] Hostile injection pattern: 11 prompt-injection or exploit markers in untrusted fields (not blocked).",
+        "action": "REVIEW_AUTH_LOG"
+      }
+    ],
+    "noise_note": "Handled 2 blocked noise items across 1643 lines of server logs."
+  },
+  "metadata": {
+    "date": "2026-10-21",
+    "host_label": "srv-prod-01",
+    "generated_at": "2026-10-21T23:59:00Z",
+    "narrator": "template",
+    "model": "gemma4:e4b",
+    "retries": 0,
+    "latency_seconds": 2.06,
+    "detectors_run": [
+      "rules",
+      "stat",
+      "iforest",
+      "ensemble"
+    ],
+    "parse_coverage": 0.998,
+    "raw_lines": 1643,
+    "attention_items": 5,
+    "lazy_ratio": 328.6
+  },
+  "handled_findings": [
+    {
+      "id": "F21",
+      "severity": "medium",
+      "kind": "ssh_brute_force_burst",
+      "entity": "198.51.100.54",
+      "window": "2026-10-21 UTC",
+      "evidence": {
+        "counts": {
+          "auth_fail_total": 15,
+          "auth_fail_max_5m": 15,
+          "probe_hits": 0,
+          "http_total": 1,
+          "fw_block_total": 0
+        },
+        "first_ts": null,
+        "last_ts": null,
+        "blocked": true,
+        "failed_attempts": 15,
+        "distinct_users": 1
+      },
+      "reasons": [
+        "[R1] Brute-force burst: 15 failures in 5 minutes (threshold >= 10)",
+        "[R8] Hostile injection pattern: 1 prompt-injection or exploit markers in untrusted fields",
+        "Statistical spike: auth_fail_total=15 (expected baseline ~0.5, Poisson p=1.46e-17)",
+        "IsolationForest top anomaly: auth_fail_total=15.0 (baseline median=0.0, robust z=150000.0)",
+        "IsolationForest top anomaly: auth_fail_max_5m=15.0 (baseline median=0.0, robust z=150000.0)"
+      ],
+      "evidence_refs": [
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 560
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 561
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 562
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 563
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 564
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 565
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 566
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 567
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 568
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 569
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 570
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 571
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 572
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 573
+        },
+        {
+          "file": "data\\synthetic_demo\\auth.log",
+          "line_no": 574
+        },
+        {
+          "file": "data\\synthetic_demo\\fail2ban.log",
+          "line_no": 7
+        },
+        {
+          "file": "data\\synthetic_demo\\nginx\\access.log",
+          "line_no": 10086
+        }
+      ],
+      "blocked": true,
+      "score": 0.9727272727272727,
+      "action": "ENABLE_KEY_ONLY_AUTH"
+    },
+    {
+      "id": "F37",
+      "severity": "medium",
+      "kind": "port_scan",
+      "entity": "203.0.113.92",
+      "window": "2026-10-21 UTC",
+      "evidence": {
+        "counts": {
+          "auth_fail_total": 0,
+          "auth_fail_max_5m": 0,
+          "probe_hits": 0,
+          "http_total": 0,
+          "fw_block_total": 18
+        },
+        "first_ts": null,
+        "last_ts": null,
+        "blocked": true,
+        "failed_attempts": 0,
+        "distinct_users": 0
+      },
+      "reasons": [
+        "[R4] Port scan: 18 destination ports probed in 5 minutes",
+        "IsolationForest top anomaly: fw_block_total=18.0 (baseline median=0.0, robust z=180000.0)",
+        "IsolationForest top anomaly: distinct_dst_ports=18.0 (baseline median=0.0, robust z=180000.0)"
+      ],
+      "evidence_refs": [
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 109
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 110
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 111
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 112
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 113
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 114
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 115
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 116
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 117
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 118
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 119
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 120
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 121
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 122
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 123
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 124
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 125
+        },
+        {
+          "file": "data\\synthetic_demo\\ufw.log",
+          "line_no": 126
+        }
+      ],
+      "blocked": true,
+      "score": 0.65,
+      "action": "BLOCK_IP_AT_FIREWALL"
+    }
+  ]
+}
