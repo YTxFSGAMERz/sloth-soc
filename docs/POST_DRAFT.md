@@ -3,7 +3,7 @@ title: "The Day an SSH Username Tried to Prompt-Inject My Security Tool"
 published: false
 description: "Building Sloth SOC: an offline, open-weight security log analyst where math decides, Gemma narrates, and attackers get ignored."
 tags: devchallenge, hf26challenge, cybersecurity, ai
-cover_image: https://raw.githubusercontent.com/YTxFSGAMERz/sloth-soc/master/results/digest_screenshot.png
+cover_image: https://raw.githubusercontent.com/YTxFSGAMERz/sloth-soc/master/results/cover_banner.png
 ---
 
 *By Farhan ([@YTxFSGAMERz](https://github.com/YTxFSGAMERz)) &mdash; Lead Engineer & Security-Minded ML Researcher*
